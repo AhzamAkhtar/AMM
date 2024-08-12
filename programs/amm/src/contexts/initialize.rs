@@ -7,13 +7,13 @@ use anchor_spl::{token_interface::{TokenAccount, Mint, TokenInterface}, associat
 #[instruction(seed: u64)]
 pub struct Initialize<'info> {
     #[account(mut)]
-    pub initializer: Signer<'info>,
+    pub user: Signer<'info>,
     pub mint_x: InterfaceAccount<'info, Mint>,
     pub mint_y: InterfaceAccount<'info, Mint>,
     #[account(
     init,
     seeds = [b"lp", config.key().as_ref()],
-    payer = initializer,
+    payer = user,
     bump,
     mint::decimals = 6,
     mint::authority = auth,
@@ -21,14 +21,14 @@ pub struct Initialize<'info> {
     pub lp_mint: InterfaceAccount<'info, Mint>,
     #[account(
     init,
-    payer = initializer,
+    payer = user,
     associated_token::mint = mint_x,
     associated_token::authority = auth,
     )]
     pub vault_x: InterfaceAccount<'info, TokenAccount>,
     #[account(
     init,
-    payer = initializer,
+    payer = user,
     associated_token::mint = mint_y,
     associated_token::authority = auth,
     )]
@@ -38,7 +38,7 @@ pub struct Initialize<'info> {
     pub auth: UncheckedAccount<'info>,
     #[account(
     init,
-    payer = initializer,
+    payer = user,
     seeds = [b"config", seed.to_le_bytes().as_ref()],
     bump,
     space = Config::INIT_SPACE,
@@ -50,7 +50,8 @@ pub struct Initialize<'info> {
 }
 
 impl<'info> Initialize<'info> {
-    pub fn init(&mut self,
+    pub fn init(&
+                mut self,
                 bumps: &InitializeBumps,
                 seed: u64,
                 fee: u16,

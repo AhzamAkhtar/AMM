@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use anchor_spl::{token_interface::{Mint, TokenAccount, TokenInterface, TransferChecked, transfer_checked, mint_to , MintTo}, associated_token::AssociatedToken};
+use anchor_spl::{token_interface::{Mint, MintTo ,  TokenAccount, TokenInterface, TransferChecked, transfer_checked, mint_to}, associated_token::AssociatedToken};
 use constant_product_curve::ConstantProduct;
 
 use crate::{Config, assert_not_locked, assert_not_expired, assert_non_zero, AmmError};
@@ -143,6 +143,7 @@ impl<'info> Deposit<'info> {
             &b"auth"[..],
             &[self.config.auth_bump],
         ];
+
 
         let signer_seeds = &[&seeds[..]];
 
